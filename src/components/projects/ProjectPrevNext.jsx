@@ -42,7 +42,7 @@ export default function ProjectPrevNext({ previous, next }) {
       </div>
 
       {/* FOOTER NAVIGATION - at the bottom */}
-      <nav className="mt-16 pt-8 border-t border-(--bordercolor) mx-4">
+  <nav className="mt-16 pt-8 pb-10 border-t border-(--bordercolor) mx-4">
         <div className="flex items-center justify-between gap-4">
           
           {/* PREVIOUS */}
