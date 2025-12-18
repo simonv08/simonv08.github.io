@@ -60,7 +60,7 @@ export default function Contact() {
                            hover:border-(--accent) transition-all flex items-center gap-4"
               >
                 {/* Icon */}
-                <div className="w-12 h-12 flex-shrink-0 rounded-full bg-(--bg) 
+                <div className="w-12 h-12 shrink-0 rounded-full bg-(--bg) 
                                 flex items-center justify-center text-(--muted)
                                 group-hover:text-(--accent) group-hover:bg-(--accent)/10 
                                 transition-colors">

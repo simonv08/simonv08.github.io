@@ -33,7 +33,7 @@ export default function About() {
               </div>
 
               {/* Info */}
-              <div className="text-center mb-6 flex-grow flex flex-col justify-center">
+              <div className="text-center mb-6 grow flex flex-col justify-center">
                 <h3 className="text-2xl font-bold text-(--text) mb-1">{siteConfig.name}</h3>
                 <p className="text-(--accent) font-medium">{siteConfig.role}</p>
               </div>
