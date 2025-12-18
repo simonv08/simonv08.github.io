@@ -1,4 +1,4 @@
-import { siteConfig } from "../siteconfig";
+import { siteConfig } from "../siteConfig";
 
 export default function Hero() {
   return (
