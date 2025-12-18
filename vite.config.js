@@ -1,6 +1,16 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [tailwindcss(), react()],
+  base: "/",
+  build: {
+    rollupOptions: {
+      input: {
+        main: "index.html",
+        404: "index.html",
+      },
+    },
+  },
 });
