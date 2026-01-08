@@ -1,12 +1,6 @@
 import { Link } from "react-router-dom";
 
-export default function ProjectCard({ project, selectedTags = [], onTagClick }) {
-  const handleTagClick = (e, tag) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onTagClick?.(tag);
-  };
-
+export default function ProjectCard({ project, onTagClick }) {
   return (
     <Link
       to={`/projects/${project.id}`}
@@ -33,8 +27,12 @@ export default function ProjectCard({ project, selectedTags = [], onTagClick }) 
             <button
               key={tag}
               type="button"
-              onClick={(e) => handleTagClick(e, tag)}
-              className={`tag cursor-pointer ${selectedTags.includes(tag) ? "active" : ""}`}
+              className="tag cursor-pointer"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onTagClick?.(tag);
+              }}
             >
               {tag}
             </button>

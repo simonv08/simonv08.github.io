@@ -61,6 +61,12 @@ h1, h2, h3 {
   font-weight: 500;
 }
 
+.tag.active {
+  background: rgba(167, 139, 250, 0.22);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
 /* project prev/next hover: subtly shift text color + ensure arrow follows color */
 .project-nav-link {
   color: var(--muted);
