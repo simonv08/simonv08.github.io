@@ -29,7 +29,7 @@ export default function ProjectCard({ project, selectedTags = [], onTagClick }) 
 
         {/* Tags */}
         <div className="flex flex-wrap gap-2 mt-3">
-          {project.tags.slice(0, 3).map((tag) => (
+          {project.tags.map((tag) => (
             <button
               key={tag}
               type="button"

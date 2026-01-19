@@ -33,9 +33,8 @@ export default function ProjectGallery({ project }) {
             {/* Video Slide */}
             {slides[currentIndex].type === "video" && (
               <iframe
-                src={slides[currentIndex].src}
+                src={slides[currentIndex].src.replace("https://www.youtube.com/watch?v=", "https://www.youtube.com/embed/")}
                 title="Project Video"
-                allowFullScreen
                 className="w-full h-full"
               />
             )}
