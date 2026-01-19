@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap'); /*main*/
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap'); /*heading*/
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap"); /*main*/
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"); /*heading*/
 @import "tailwindcss";
 
 :root {
@@ -24,23 +24,19 @@
   --shadow-md: 0 8px 22px rgba(8, 4, 20, 0.4);
   --shadow-lg: 0 28px 60px rgba(8, 4, 20, 0.55);
 
-  --font-main: 'Roboto Mono', monospace;
-  --font-heading: 'JetBrains Mono', monospace;
+  --font-main: "Roboto Mono", monospace;
+  --font-heading: "JetBrains Mono", monospace;
 }
 
 body {
-  background:
-    linear-gradient(
-      135deg,
-      #120b2e 0%,
-      #1b1248 50%,
-      var(--bg) 100%
-    );
+  background: linear-gradient(135deg, #120b2e 0%, #1b1248 50%, var(--bg) 100%);
   color: var(--text);
   font-family: var(--font-main);
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   font-family: var(--font-heading);
 }
 
@@ -67,6 +63,13 @@ h1, h2, h3 {
   color: var(--accent-text);
 }
 
+.tag:hover {
+  background: rgba(113, 100, 151, 0.16);
+  border-color: rgba(75, 60, 120, 0.5);
+  border-radius: var(--radius-md);
+  color: color-mix(in srgb, var(--muted) 70%, var(--accent) 30%);
+}
+
 /* project prev/next hover: subtly shift text color + ensure arrow follows color */
 .project-nav-link {
   color: var(--muted);
@@ -76,7 +79,10 @@ h1, h2, h3 {
 .project-nav-link svg path {
   stroke: currentColor;
   color: inherit;
-  transition: color .12s ease, stroke .12s ease, transform .12s ease;
+  transition:
+    color 0.12s ease,
+    stroke 0.12s ease,
+    transform 0.12s ease;
 }
 
 .project-nav-link:hover {

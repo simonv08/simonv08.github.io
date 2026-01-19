@@ -37,6 +37,8 @@
       "git": "https://github.com/fvugt/asteroids-3d",
       "itch": "https://fvugt.itch.io/asteroids-3d"
     },
+
+
     {
       "id": "xr-escape-room",
       "title": "XR Escape Room",
@@ -66,6 +68,8 @@
         }
       ]
     },
+
+
     {
       "id": "topdown-shooter",
       "title": "Topdown Shooter",
@@ -100,6 +104,8 @@
         }
       ]
     },
+
+    
     {
       "id": "vr-training-sim",
       "title": "VR Training Simulator",
@@ -137,6 +143,8 @@
       "git": "https://github.com/fvugt/vr-training-sim",
       "itch": ""
     },
+
+    
     {
       "id": "ar-museum-guide",
       "title": "AR Museum Guide",
