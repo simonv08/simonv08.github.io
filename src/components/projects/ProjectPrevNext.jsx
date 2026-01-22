@@ -54,7 +54,7 @@ export default function ProjectPrevNext({ previous, next }) {
             >
               <ArrowLeft className="w-5 h-5 shrink-0 text-(--muted) group-hover:text-(--accent) group-hover:-translate-x-1 transition-transform" aria-hidden />
               <div className="flex flex-col min-w-0">
-                <span className="text-xs text-(--muted) uppercase tracking-wider">Vorige</span>
+                <span className="text-xs text-(--muted) uppercase tracking-wider">Previous</span>
                 <span className="font-semibold truncate">{previous.title}</span>
               </div>
             </Link>
@@ -70,7 +70,7 @@ export default function ProjectPrevNext({ previous, next }) {
               className="group flex items-center gap-3 hover:text-(--accent) transition-colors max-w-[45%] ml-auto"
             >
               <div className="flex flex-col min-w-0 text-right">
-                <span className="text-xs text-(--muted) uppercase tracking-wider">Volgende</span>
+                <span className="text-xs text-(--muted) uppercase tracking-wider">Next</span>
                 <span className="font-semibold truncate">{next.title}</span>
               </div>
               <ArrowRight className="w-5 h-5 shrink-0 text-(--muted) group-hover:text-(--accent) group-hover:translate-x-1 transition-transform" aria-hidden />

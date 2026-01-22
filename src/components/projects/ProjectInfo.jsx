@@ -23,12 +23,12 @@ export default function ProjectInfo({ project }) {
 
           <ul className="text-sm space-y-2 text-(--muted)">
             <li className="flex justify-between border-b border-(--bordercolor) pb-1">
-              <span className="font-medium text-(--text)">Rol</span>
+              <span className="font-medium text-(--text)">role</span>
               <span>{project.projectRole}</span>
             </li>
 
             <li className="flex justify-between border-b border-(--bordercolor) pb-1">
-              <span className="font-medium text-(--text)">Tijdlijn</span>
+              <span className="font-medium text-(--text)">Timeline</span>
               <span>{project.timeline}</span>
             </li>
 

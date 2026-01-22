@@ -2,7 +2,7 @@ export const siteConfig = {
   name: "Simon Vastenhoud",
   role: "XR Developer",
   tagline:
-    "Ik bouw interactieve XR-ervaringen die zich natuurlijk en intuïtief aanvoelen.",
+    "I build interactive XR experiences that feel natural and intuitive.",
   aboutImage: "https://api.dicebear.com/7.x/notionists/png?seed=portfolio",
   cv: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
 
@@ -14,20 +14,17 @@ export const siteConfig = {
   },
 
   aboutLong: `
-    Ik ben een XR Developer die energie krijgt van het bouwen van interactieve, 
-    fysieke en intuïtieve ervaringen in VR en AR. Voor mij draait goede XR niet 
-    alleen om technologie, maar vooral om hoe gebruikers een digitale wereld 
-    *voelen*. Ik werk graag iteratief met prototypes: snel testen, verbeteren en 
-    opnieuw testen — net zo lang tot interacties natuurlijk en prettig aanvoelen.
-
-    Ik ga deze tekst aanpassen en een stuk persoonlijker maken door ook iets leuks
-    over mijzelf te vertellen!
+    I am an XR Developer energized by creating interactive, tangible, and intuitive
+    experiences in VR and AR. For me, great XR is not only about technology, but
+    especially about how users experience and feel a digital world. I prefer an
+    iterative, prototype-driven approach: test quickly, refine, and test again —
+    until interactions feel natural and enjoyable.
   `,
 
   softSkills: [
-    "Samenwerken met artists",
-    "Feedback geven & ontvangen",
-    "Probleemoplossend denken",
+    "Collaborating with artists",
+    "Giving and receiving feedback",
+    "Problem-solving",
   ],
 
   hardSkills: [

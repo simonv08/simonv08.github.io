@@ -3,7 +3,7 @@
     {
       "id": "astrofish",
       "title": "astrofish",
-      "tagline": "GGJ 2025 game jam inzending: een vis die de ruimte probeerd te bereiken.",
+      "tagline": "GGJ 2025 game jam submission: a fish trying to reach space.",
       "description": "",
       "thumbnail": "https://img.itch.zone/aW1nLzE5NzA3MDY4LnBuZw==/315x250%23c/lRn1uE.png",
       "youtube": "",
@@ -17,7 +17,7 @@
         "Game Jam"
       ],
       "projectRole": "Gameplay Programmer",
-      "timeline": "30 uur",
+      "timeline": "30 Hours",
       "mechanics": [
         {
           "subtitle": "",
@@ -56,7 +56,7 @@
         "Shooter" 
       ],
       "projectRole": "Developer",
-      "timeline": "3 weken",
+      "timeline": "3 weeks",
       "mechanics": [
         {
           "subtitle": "",

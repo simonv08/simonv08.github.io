@@ -2,11 +2,11 @@ import { siteConfig } from "../siteConfig";
 import { GitHub, LinkedIn, Itch, Envelope, ChevronRight } from "../components/icons/icons.jsx";
 
 export default function Contact() {
-  // Social media configuratie met iconen
+  // Social media configuration with icons
   const socialLinks = [
-    { name: "GitHub", url: siteConfig.socials.github, description: "Bekijk mijn code en projecten", icon: <GitHub className="w-8 h-8" /> },
-    { name: "LinkedIn", url: siteConfig.socials.linkedin, description: "Connect met mij", icon: <LinkedIn className="w-8 h-8" /> },
-    { name: "Itch.io", url: siteConfig.socials.itch, description: "Speel mijn games", icon: <Itch className="w-8 h-8" /> },
+    { name: "GitHub", url: siteConfig.socials.github, description: "View my code and projects", icon: <GitHub className="w-8 h-8" /> },
+    { name: "LinkedIn", url: siteConfig.socials.linkedin, description: "Connect with me", icon: <LinkedIn className="w-8 h-8" /> },
+    { name: "Itch.io", url: siteConfig.socials.itch, description: "Play my games", icon: <Itch className="w-8 h-8" /> },
   ];
 
   return (
@@ -16,7 +16,7 @@ export default function Contact() {
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-(--text) mb-4">Contact</h1>
           <p className="text-xl text-(--muted) max-w-2xl mx-auto">
-            Interesse in samenwerking of gewoon een vraag? Neem gerust contact op!
+            Interested in collaborating or just have a question? Feel free to contact me!
           </p>
         </div>
 
@@ -30,10 +30,10 @@ export default function Contact() {
                 <Envelope className="w-8 h-8" />
               </div>
               <h2 className="text-2xl font-bold text-(--text) mb-2 text-center lg:text-left">
-                Direct contact
+                Direct Contact
               </h2>
               <p className="text-(--muted) mb-6 text-center lg:text-left">
-                Stuur me een email en ik reageer zo snel mogelijk.
+                Send me an email and I will respond as soon as possible.
               </p>
             </div>
             <a
@@ -49,7 +49,7 @@ export default function Contact() {
 
           {/* Social Links - Right/Bottom */}
           <div className="lg:flex-1 flex flex-col gap-4">
-            <h2 className="text-2xl font-bold text-(--text) mb-2">Vind me online</h2>
+            <h2 className="text-2xl font-bold text-(--text) mb-2">Find me online</h2>
             {socialLinks.map((social) => (
               <a
                 key={social.name}
