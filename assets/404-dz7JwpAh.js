@@ -54,44 +54,281 @@ Please change the parent <Route path="${m}"> to <Route path="${m==="/"?"*":`${m}
     especially about how users experience and feel a digital world. I prefer an
     iterative, prototype-driven approach: test quickly, refine, and test again —
     until interactions feel natural and enjoyable.
-  `,softSkills:["Collaborating with artists","Giving and receiving feedback","Problem-solving"],hardSkills:["Unity & XR Interaction Toolkit","C# Scripting","Git & Version Control"]},dw=[{id:"astrofish",title:"astrofish",tagline:"GGJ 2025 game jam submission: a fish trying to reach space.",description:"",thumbnail:"https://img.itch.zone/aW1nLzE5NzA3MDY4LnBuZw==/315x250%23c/lRn1uE.png",youtube:"",screenshots:[],tags:["Unity","C#","2D","Game Jam"],projectRole:"Gameplay Programmer",timeline:"30 Hours",mechanics:[{subtitle:"",description:"",image:"",code:`void Update()
-{
-    if (Input.GetKey(KeyCode.W))
-        rb.AddForce(transform.up * thrust);
+  `,softSkills:["Collaborating with artists","Giving and receiving feedback","Problem-solving"],hardSkills:["Unity & XR Interaction Toolkit","C# Scripting","Git & Version Control"]},dw=[{id:"astrofish",title:"astrofish",tagline:"GGJ 2025 game jam submission: a fish trying to reach space.",description:"",thumbnail:"https://img.itch.zone/aW1nLzE5NzA3MDY4LnBuZw==/315x250%23c/lRn1uE.png",youtube:"",screenshots:[],tags:["Unity","C#","2D","Game Jam"],projectRole:"Gameplay Programmer",timeline:"30 Hours",mechanics:[{subtitle:"moving platform",description:"a moving platform that oscillates horizontally, providing a dynamic element to the level design.",image:"",code:`using UnityEngine;
+using UnityEngine.Windows;
+ 
+using UnityEngine;
 
-    float rotate = Input.GetAxis("Horizontal");
-    rb.MoveRotation(rb.rotation - rotate * rotateSpeed * Time.deltaTime);
-}`},{subtitle:"",description:"",image:"",code:`void SpawnAsteroid()
+public class PlatformMovement : MonoBehaviour
 {
-    Vector3 pos = Random.onUnitSphere * spawnRadius;
-    float size = Random.Range(0.5f, 2.5f);
+    [Header(Movement Settings)]
+    [SerializeField] private float _moveSpeed = 3f;
+    [SerializeField] private float _horizontalRange = 5f;
+    [SerializeField] private bool _startMovingLeft = false;
 
-    GameObject ast = Instantiate(asteroidPrefab, pos, Random.rotation);
-    ast.transform.localScale = Vector3.one * size;
+    private float _boundaryOffset;
+    private bool _isGoingLeft;
 
-    Rigidbody rb = ast.GetComponent<Rigidbody>();
-    rb.AddForce(Random.onUnitSphere * Random.Range(5,15), ForceMode.Impulse);
-}`}],git:"https://github.com/StefandePutter/astrofish",itch:"https://wensputter.itch.io/astrofish"},{id:"piracy its a crime",title:"piracy its a crime",tagline:"",description:"",thumbnail:"https://img.itch.zone/aW1nLzIxOTc2OTE5LnBuZw==/original/9fdk65.png",youtube:"https://www.youtube.com/watch?v=OGp_lGlqNQY",screenshots:[],tags:["3D","VR","Unity","C#","Shooter"],projectRole:"Developer",timeline:"3 weeks",mechanics:[{subtitle:"",description:"",image:"",code:`public void OnSelectEntered(SelectEnterEventArgs args)
+    private void Start()
+    {
+        _isGoingLeft = _startMovingLeft;
+        float currentScale = transform.localScale.x;
+        float baseConstant = 9.53f;
+        _boundaryOffset = (baseConstant * (1f - currentScale)) + _horizontalRange;
+    }
+
+    private void Update()
+    {
+        HandleMovement();
+        CheckBoundaries();
+    }
+
+    private void HandleMovement()
+    {
+        float direction = _isGoingLeft ? -1f : 1f;
+        transform.Translate(Vector3.right * (direction * _moveSpeed * Time.deltaTime), Space.World);
+    }
+
+    private void CheckBoundaries()
+    {
+        if (transform.position.x <= -_boundaryOffset) _isGoingLeft = false;
+        else if (transform.position.x >= _boundaryOffset) _isGoingLeft = true;
+    }
+}`},{subtitle:"fish shooter",description:"shooting mechanic for the fish character, allowing them to fire water shots at enemies.",image:"",code:`using System.Collections;
+using UnityEngine;
+
+public class FishShooter : MonoBehaviour
 {
-    grabbed = true;
-    rb.isKinematic = true;
+    [Header(Combat Settings)]
+    [SerializeField] private GameObject _waterShotPrefab;
+    [SerializeField] private float _fireRate = 1f;
+    [SerializeField] private float _kickbackForce = 10f;
+    [SerializeField] private float _spawnDistance = 0.2f;
+    [SerializeField] private float _burstDuration = 0.1f;
+
+    private Rigidbody2D _rb;
+    private Fish _fish;
+    private float _nextFireTime;
+    private float _cooldownTimer;
+    private bool _isShooting;
+
+    private void Start()
+    {
+        _rb = GetComponent<Rigidbody2D>();
+        _fish = GetComponent<Fish>();
+    }
+
+    private void Update()
+    {
+        if (_isShooting && _fish.state != PlayerState.flying)
+        {
+            HandleShooting();
+        }
+    }
+
+    private void HandleShooting()
+    {
+        if (Time.time < _nextFireTime) return;
+
+        // Vector Math: Calculate direction to mouse
+        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(_fish.mousePos);
+        Vector2 targetDir = (mouseWorldPos - transform.position).normalized;
+
+        // Calculate rotation and spawn offset
+        float angle = Mathf.Atan2(targetDir.y, targetDir.x) * Mathf.Rad2Deg;
+        Quaternion spawnRotation = Quaternion.Euler(0, 0, angle);
+        Vector3 spawnPos = transform.position + (Vector3)targetDir * _spawnDistance;
+
+        // Instantiate and apply recoil
+        GameObject shot = Instantiate(_waterShotPrefab, spawnPos, spawnRotation);
+        _rb.AddForce(-targetDir * _kickbackForce, ForceMode2D.Impulse);
+
+        _nextFireTime = Time.time + 1f / _fireRate;
+        Destroy(shot, 0.5f);
+    }
+
+    public void OnAttack()
+    {
+        if (Time.time < _cooldownTimer) return;
+
+        StartCoroutine(ExecuteShootBurst());
+    }
+
+    private IEnumerator ExecuteShootBurst()
+    {
+        _isShooting = true;
+        yield return new WaitForSeconds(_burstDuration);
+        _isShooting = false;
+
+        _cooldownTimer = Time.time + 2f; // Cooldown after burst
+    }
+}`}],git:"https://github.com/StefandePutter/astrofish",itch:"https://wensputter.itch.io/astrofish"},{id:"piracy its a crime",title:"piracy its a crime",tagline:"",description:"",thumbnail:"https://img.itch.zone/aW1nLzIxOTc2OTE5LnBuZw==/original/9fdk65.png",youtube:"https://www.youtube.com/watch?v=OGp_lGlqNQY",screenshots:[],tags:["3D","VR","Unity","C#","Shooter"],projectRole:"Developer",timeline:"3 weeks",mechanics:[{subtitle:"Systemic Loot & Probability Engine",description:"A designer-centric loot system that uses weighted probability to handle item drops upon entity destruction.",image:"",code:`[System.Serializable]
+public class DropTableEntry
+{
+    public GameObject dropItem;
+    [Range(0, 100)] public int dropChance; // Relative weight
 }
 
-public void OnSelectExited(SelectExitEventArgs args)
+public class EnemyBase : MonoBehaviour
 {
-    grabbed = false;
-    rb.isKinematic = false;
+    [Header(Loot Configuration)]
+    [SerializeField] private GameObject _guaranteedDrop;
+    [SerializeField] private List<DropTableEntry> _dropTable = new List<DropTableEntry>();
+
+    protected void HandleDrops()
+    {
+        // 1. Process Guaranteed Loot
+        if (_guaranteedDrop != null)
+        {
+            Instantiate(_guaranteedDrop, transform.position, Quaternion.identity);
+        }
+
+        // 2. Process Weighted Random Loot
+        if (_dropTable == null || _dropTable.Count == 0) return;
+
+        int totalWeight = 0;
+        foreach (var entry in _dropTable) totalWeight += entry.dropChance;
+
+        int roll = Random.Range(0, totalWeight);
+        int cumulativeWeight = 0;
+
+        foreach (var entry in _dropTable)
+        {
+            cumulativeWeight += entry.dropChance;
+            if (roll < cumulativeWeight)
+            {
+                Instantiate(entry.dropItem, transform.position, Quaternion.identity);
+                break; // Exit after successful drop
+            }
+        }
+    }
+}`},{subtitle:"Game State Manager",description:"A centralized manager utilizing the Singleton design pattern to govern high-level game states and persistent UI logic across scene transitions.",image:"",code:`using UnityEngine;
+
+public class GameManager : MonoBehaviour
+{
+    public static GameManager Instance { get; private set; }
+
+    public enum GameState { Playing, Won, Lost }
+    [SerializeField] private GameState _currentState = GameState.Playing;
+
+    [Header(UI References)]
+    [SerializeField] private GameObject _winUI;
+    [SerializeField] private GameObject _loseUI;
+
+    private void Awake()
+    {
+        // Singleton Pattern Enforcement
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+            InitializeUI();
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public void SetState(GameState newState)
+    {
+        if (_currentState != GameState.Playing) return;
+
+        _currentState = newState;
+        Time.timeScale = 0f; // Global pause on game end
+
+        if (newState == GameState.Won) _winUI?.SetActive(true);
+        else if (newState == GameState.Lost) _loseUI?.SetActive(true);
+    }
+
+    private void InitializeUI()
+    {
+        _winUI = _winUI ?? GameObject.FindGameObjectWithTag(WinCanvas);
+        _loseUI = _loseUI ?? GameObject.FindGameObjectWithTag(LoseCanvas);
+
+        _winUI?.SetActive(false);
+        _loseUI?.SetActive(false);
+    }
+
+    public void ResetGame()
+    {
+        _currentState = GameState.Playing;
+        Time.timeScale = 1f;
+        _winUI?.SetActive(false);
+        _loseUI?.SetActive(false);
+    }
+}`},{subtitle:"Player Health & Attribute Controller",description:"A performance-optimized health system featuring passive regeneration logic, conditional 'God Mode' overrides, and efficient UI synchronization.",image:"",code:`using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    public static PlayerController Instance { get; private set; }
+
+    [Header('Health Settings')]
+    [SerializeField] private int _maxHealth = 100;
+    [SerializeField] private float _regenRate = 2f;
+    [SerializeField] private bool _canRegenerate = true;
+    
+    [Header('Debug & UI')]
+    [SerializeField] private bool _isGodMode;
+    [SerializeField] private WristWatch _wristWatch;
+
+    private float _currentHealth;
+    private float _lastHealthFrame;
+
+    private void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+    }
+
+    private void Start()
+    {
+        _currentHealth = _maxHealth;
+        UpdateHealthUI(forceUpdate: true);
+    }
+
+    private void Update()
+    {
+        if (_isGodMode)
+        {
+            _currentHealth = _maxHealth;
+        }
+        else if (_canRegenerate && _currentHealth < _maxHealth)
+        {
+            _currentHealth = Mathf.MoveTowards(_currentHealth, _maxHealth, _regenRate * Time.deltaTime);
+        }
+
+        // Only update UI if the health value has meaningfully changed
+        if (!Mathf.Approximately(_currentHealth, _lastHealthFrame))
+        {
+            UpdateHealthUI();
+            _lastHealthFrame = _currentHealth;
+        }
+    }
+
+    public void ModifyHealth(int amount)
+    {
+        if (_isGodMode && amount < 0) return;
+
+        _currentHealth = Mathf.Clamp(_currentHealth + amount, 0, _maxHealth);
+
+        if (_currentHealth <= 0)
+        {
+            HandleDeath();
+        }
+    }
+
+    private void UpdateHealthUI(bool forceUpdate = false)
+    {
+        _wristWatch?.SetHealth(Mathf.CeilToInt(_currentHealth), _maxHealth);
+    }
+
+    private void HandleDeath()
+    {
+        GameManager.Instance.LoseGame();
+        Debug.Log('Player Defeated');
+    }
 }`}],git:"https://github.com/simonv08/Piracy-Its-A-Crime",itch:"https://avocadosauce.itch.io/piracy-its-a-crime"},{id:"",title:"",tagline:"",description:"",thumbnail:"",youtube:"",screenshots:[],tags:["","","",""],projectRole:"",timeline:"",mechanics:[{subtitle:"",description:"",image:"",code:`public void OnSelectEntered(SelectEnterEventArgs args)
-{
-    grabbed = true;
-    rb.isKinematic = true;
-}
-
-public void OnSelectExited(SelectExitEventArgs args)
-{
-    grabbed = false;
-    rb.isKinematic = false;
-}`}]},{id:"",title:"",tagline:"",description:"",thumbnail:"",youtube:"",screenshots:[],tags:["","","",""],projectRole:"",timeline:"",mechanics:[{subtitle:"",description:"",image:"",code:`public void OnSelectEntered(SelectEnterEventArgs args)
 {
     grabbed = true;
     rb.isKinematic = true;
