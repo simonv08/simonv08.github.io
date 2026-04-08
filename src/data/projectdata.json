@@ -7,36 +7,27 @@
       "description": "",
       "thumbnail": "https://img.itch.zone/aW1nLzE5NzA3MDY4LnBuZw==/315x250%23c/lRn1uE.png",
       "youtube": "",
-      "screenshots": [
-    
-      ],
-      "tags": [
-        "Unity",
-        "C#",
-        "2D",
-        "Game Jam"
-      ],
+      "screenshots": [],
+      "tags": ["Unity", "C#", "2D", "Game Jam"],
       "projectRole": "Gameplay Programmer",
       "timeline": "30 Hours",
       "mechanics": [
         {
-          "subtitle": "",
-          "description": "",
+          "subtitle": "moving platform",
+          "description": "a moving platform that oscillates horizontally, providing a dynamic element to the level design.",
           "image": "",
-          "code": "void Update()\n{\n    if (Input.GetKey(KeyCode.W))\n        rb.AddForce(transform.up * thrust);\n\n    float rotate = Input.GetAxis(\"Horizontal\");\n    rb.MoveRotation(rb.rotation - rotate * rotateSpeed * Time.deltaTime);\n}"
+          "code": "using UnityEngine;\nusing UnityEngine.Windows;\n \nusing UnityEngine;\n\npublic class PlatformMovement : MonoBehaviour\n{\n    [Header(Movement Settings)]\n    [SerializeField] private float _moveSpeed = 3f;\n    [SerializeField] private float _horizontalRange = 5f;\n    [SerializeField] private bool _startMovingLeft = false;\n\n    private float _boundaryOffset;\n    private bool _isGoingLeft;\n\n    private void Start()\n    {\n        _isGoingLeft = _startMovingLeft;\n        float currentScale = transform.localScale.x;\n        float baseConstant = 9.53f;\n        _boundaryOffset = (baseConstant * (1f - currentScale)) + _horizontalRange;\n    }\n\n    private void Update()\n    {\n        HandleMovement();\n        CheckBoundaries();\n    }\n\n    private void HandleMovement()\n    {\n        float direction = _isGoingLeft ? -1f : 1f;\n        transform.Translate(Vector3.right * (direction * _moveSpeed * Time.deltaTime), Space.World);\n    }\n\n    private void CheckBoundaries()\n    {\n        if (transform.position.x <= -_boundaryOffset) _isGoingLeft = false;\n        else if (transform.position.x >= _boundaryOffset) _isGoingLeft = true;\n    }\n}"
         },
         {
-          "subtitle": "",
-          "description": "",
+          "subtitle": "fish shooter",
+          "description": "shooting mechanic for the fish character, allowing them to fire water shots at enemies.",
           "image": "",
-          "code": "void SpawnAsteroid()\n{\n    Vector3 pos = Random.onUnitSphere * spawnRadius;\n    float size = Random.Range(0.5f, 2.5f);\n\n    GameObject ast = Instantiate(asteroidPrefab, pos, Random.rotation);\n    ast.transform.localScale = Vector3.one * size;\n\n    Rigidbody rb = ast.GetComponent<Rigidbody>();\n    rb.AddForce(Random.onUnitSphere * Random.Range(5,15), ForceMode.Impulse);\n}"
+          "code": "using System.Collections;\nusing UnityEngine;\n\npublic class FishShooter : MonoBehaviour\n{\n    [Header(Combat Settings)]\n    [SerializeField] private GameObject _waterShotPrefab;\n    [SerializeField] private float _fireRate = 1f;\n    [SerializeField] private float _kickbackForce = 10f;\n    [SerializeField] private float _spawnDistance = 0.2f;\n    [SerializeField] private float _burstDuration = 0.1f;\n\n    private Rigidbody2D _rb;\n    private Fish _fish;\n    private float _nextFireTime;\n    private float _cooldownTimer;\n    private bool _isShooting;\n\n    private void Start()\n    {\n        _rb = GetComponent<Rigidbody2D>();\n        _fish = GetComponent<Fish>();\n    }\n\n    private void Update()\n    {\n        if (_isShooting && _fish.state != PlayerState.flying)\n        {\n            HandleShooting();\n        }\n    }\n\n    private void HandleShooting()\n    {\n        if (Time.time < _nextFireTime) return;\n\n        // Vector Math: Calculate direction to mouse\n        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(_fish.mousePos);\n        Vector2 targetDir = (mouseWorldPos - transform.position).normalized;\n\n        // Calculate rotation and spawn offset\n        float angle = Mathf.Atan2(targetDir.y, targetDir.x) * Mathf.Rad2Deg;\n        Quaternion spawnRotation = Quaternion.Euler(0, 0, angle);\n        Vector3 spawnPos = transform.position + (Vector3)targetDir * _spawnDistance;\n\n        // Instantiate and apply recoil\n        GameObject shot = Instantiate(_waterShotPrefab, spawnPos, spawnRotation);\n        _rb.AddForce(-targetDir * _kickbackForce, ForceMode2D.Impulse);\n\n        _nextFireTime = Time.time + 1f / _fireRate;\n        Destroy(shot, 0.5f);\n    }\n\n    public void OnAttack()\n    {\n        if (Time.time < _cooldownTimer) return;\n\n        StartCoroutine(ExecuteShootBurst());\n    }\n\n    private IEnumerator ExecuteShootBurst()\n    {\n        _isShooting = true;\n        yield return new WaitForSeconds(_burstDuration);\n        _isShooting = false;\n\n        _cooldownTimer = Time.time + 2f; // Cooldown after burst\n    }\n}"
         }
-      ]
-      ,
+      ],
       "git": "https://github.com/StefandePutter/astrofish",
       "itch": "https://wensputter.itch.io/astrofish"
     },
-
 
     {
       "id": "piracy its a crime",
@@ -45,48 +36,43 @@
       "description": "",
       "thumbnail": "https://img.itch.zone/aW1nLzIxOTc2OTE5LnBuZw==/original/9fdk65.png",
       "youtube": "https://www.youtube.com/watch?v=OGp_lGlqNQY",
-      "screenshots": [
-      
-      ],
-      "tags": [
-        "3D",
-        "VR",
-        "Unity",
-        "C#",
-        "Shooter" 
-      ],
+      "screenshots": [],
+      "tags": ["3D", "VR", "Unity", "C#", "Shooter"],
       "projectRole": "Developer",
       "timeline": "3 weeks",
       "mechanics": [
         {
-          "subtitle": "",
-          "description": "",
+          "subtitle": "Systemic Loot & Probability Engine",
+          "description": "A designer-centric loot system that uses weighted probability to handle item drops upon entity destruction.",
           "image": "",
-          "code": "public void OnSelectEntered(SelectEnterEventArgs args)\n{\n    grabbed = true;\n    rb.isKinematic = true;\n}\n\npublic void OnSelectExited(SelectExitEventArgs args)\n{\n    grabbed = false;\n    rb.isKinematic = false;\n}"
+          "code": "[System.Serializable]\npublic class DropTableEntry\n{\n    public GameObject dropItem;\n    [Range(0, 100)] public int dropChance; // Relative weight\n}\n\npublic class EnemyBase : MonoBehaviour\n{\n    [Header(Loot Configuration)]\n    [SerializeField] private GameObject _guaranteedDrop;\n    [SerializeField] private List<DropTableEntry> _dropTable = new List<DropTableEntry>();\n\n    protected void HandleDrops()\n    {\n        // 1. Process Guaranteed Loot\n        if (_guaranteedDrop != null)\n        {\n            Instantiate(_guaranteedDrop, transform.position, Quaternion.identity);\n        }\n\n        // 2. Process Weighted Random Loot\n        if (_dropTable == null || _dropTable.Count == 0) return;\n\n        int totalWeight = 0;\n        foreach (var entry in _dropTable) totalWeight += entry.dropChance;\n\n        int roll = Random.Range(0, totalWeight);\n        int cumulativeWeight = 0;\n\n        foreach (var entry in _dropTable)\n        {\n            cumulativeWeight += entry.dropChance;\n            if (roll < cumulativeWeight)\n            {\n                Instantiate(entry.dropItem, transform.position, Quaternion.identity);\n                break; // Exit after successful drop\n            }\n        }\n    }\n}"
+        },
+        {
+          "subtitle": "Game State Manager",
+          "description": "A centralized manager utilizing the Singleton design pattern to govern high-level game states and persistent UI logic across scene transitions.",
+          "image": "",
+          "code": "using UnityEngine;\n\npublic class GameManager : MonoBehaviour\n{\n    public static GameManager Instance { get; private set; }\n\n    public enum GameState { Playing, Won, Lost }\n    [SerializeField] private GameState _currentState = GameState.Playing;\n\n    [Header(UI References)]\n    [SerializeField] private GameObject _winUI;\n    [SerializeField] private GameObject _loseUI;\n\n    private void Awake()\n    {\n        // Singleton Pattern Enforcement\n        if (Instance == null)\n        {\n            Instance = this;\n            DontDestroyOnLoad(gameObject);\n            InitializeUI();\n        }\n        else\n        {\n            Destroy(gameObject);\n        }\n    }\n\n    public void SetState(GameState newState)\n    {\n        if (_currentState != GameState.Playing) return;\n\n        _currentState = newState;\n        Time.timeScale = 0f; // Global pause on game end\n\n        if (newState == GameState.Won) _winUI?.SetActive(true);\n        else if (newState == GameState.Lost) _loseUI?.SetActive(true);\n    }\n\n    private void InitializeUI()\n    {\n        _winUI = _winUI ?? GameObject.FindGameObjectWithTag(WinCanvas);\n        _loseUI = _loseUI ?? GameObject.FindGameObjectWithTag(LoseCanvas);\n\n        _winUI?.SetActive(false);\n        _loseUI?.SetActive(false);\n    }\n\n    public void ResetGame()\n    {\n        _currentState = GameState.Playing;\n        Time.timeScale = 1f;\n        _winUI?.SetActive(false);\n        _loseUI?.SetActive(false);\n    }\n}"
+        },
+        {
+          "subtitle": "Player Health & Attribute Controller",
+          "description": "A performance-optimized health system featuring passive regeneration logic, conditional 'God Mode' overrides, and efficient UI synchronization.",
+          "image": "",
+          "code": "using UnityEngine;\n\npublic class PlayerController : MonoBehaviour\n{\n    public static PlayerController Instance { get; private set; }\n\n    [Header('Health Settings')]\n    [SerializeField] private int _maxHealth = 100;\n    [SerializeField] private float _regenRate = 2f;\n    [SerializeField] private bool _canRegenerate = true;\n    \n    [Header('Debug & UI')]\n    [SerializeField] private bool _isGodMode;\n    [SerializeField] private WristWatch _wristWatch;\n\n    private float _currentHealth;\n    private float _lastHealthFrame;\n\n    private void Awake()\n    {\n        if (Instance == null) Instance = this;\n        else Destroy(gameObject);\n    }\n\n    private void Start()\n    {\n        _currentHealth = _maxHealth;\n        UpdateHealthUI(forceUpdate: true);\n    }\n\n    private void Update()\n    {\n        if (_isGodMode)\n        {\n            _currentHealth = _maxHealth;\n        }\n        else if (_canRegenerate && _currentHealth < _maxHealth)\n        {\n            _currentHealth = Mathf.MoveTowards(_currentHealth, _maxHealth, _regenRate * Time.deltaTime);\n        }\n\n        // Only update UI if the health value has meaningfully changed\n        if (!Mathf.Approximately(_currentHealth, _lastHealthFrame))\n        {\n            UpdateHealthUI();\n            _lastHealthFrame = _currentHealth;\n        }\n    }\n\n    public void ModifyHealth(int amount)\n    {\n        if (_isGodMode && amount < 0) return;\n\n        _currentHealth = Mathf.Clamp(_currentHealth + amount, 0, _maxHealth);\n\n        if (_currentHealth <= 0)\n        {\n            HandleDeath();\n        }\n    }\n\n    private void UpdateHealthUI(bool forceUpdate = false)\n    {\n        _wristWatch?.SetHealth(Mathf.CeilToInt(_currentHealth), _maxHealth);\n    }\n\n    private void HandleDeath()\n    {\n        GameManager.Instance.LoseGame();\n        Debug.Log('Player Defeated');\n    }\n}"
         }
-      ]
-      ,
+      ],
       "git": "https://github.com/simonv08/Piracy-Its-A-Crime",
       "itch": "https://avocadosauce.itch.io/piracy-its-a-crime"
     },
 
-
-      {
+    {
       "id": "",
       "title": "",
       "tagline": "",
       "description": "",
       "thumbnail": "",
       "youtube": "",
-      "screenshots": [
-      
-      ],
-      "tags": [
-        "",
-        "",
-        "",
-        ""
-      ],
+      "screenshots": [],
+      "tags": ["", "", "", ""],
       "projectRole": "",
       "timeline": "",
       "mechanics": [
@@ -99,52 +85,15 @@
       ]
     },
 
-    
-        {
+    {
       "id": "",
       "title": "",
       "tagline": "",
       "description": "",
       "thumbnail": "",
       "youtube": "",
-      "screenshots": [
-      
-      ],
-      "tags": [
-        "",
-        "",
-        "",
-        ""
-      ],
-      "projectRole": "",
-      "timeline": "",
-      "mechanics": [
-        {
-          "subtitle": "",
-          "description": "",
-          "image": "",
-          "code": "public void OnSelectEntered(SelectEnterEventArgs args)\n{\n    grabbed = true;\n    rb.isKinematic = true;\n}\n\npublic void OnSelectExited(SelectExitEventArgs args)\n{\n    grabbed = false;\n    rb.isKinematic = false;\n}"
-        }
-      ]
-    },
-
-
-       {
-      "id": "",
-      "title": "",
-      "tagline": "",
-      "description": "",
-      "thumbnail": "",
-      "youtube": "",
-      "screenshots": [
-      
-      ],
-      "tags": [
-        "",
-        "",
-        "",
-        ""
-      ],
+      "screenshots": [],
+      "tags": ["", "", "", ""],
       "projectRole": "",
       "timeline": "",
       "mechanics": [
