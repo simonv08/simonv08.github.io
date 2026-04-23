@@ -65,45 +65,49 @@
     },
 
     {
-      "id": "",
-      "title": "",
-      "tagline": "",
-      "description": "",
-      "thumbnail": "",
+      "id": "react-task-sync-system",
+      "title": "Real-Time Productivity Suite",
+      "tagline": "Cloud-synced task and grocery management with offline-first persistence",
+      "description": "A high-performance productivity application built with React, Vite, and Tailwind CSS. The system leverages Firebase for instant multi-device synchronization, ensuring grocery lists and task updates are propagated in real-time. Engineered with a mobile-first philosophy, it provides a seamless utility experience across web and handheld platforms, focusing on state management and reactive data flow.",
+      "thumbnail": "/ToDoPRioIMAGE.png",
       "youtube": "",
       "screenshots": [],
-      "tags": ["", "", "", ""],
-      "projectRole": "",
-      "timeline": "",
+      "tags": ["React", "Firebase", "Tailwind", "Web App"],
+      "projectRole": "Solo Developer",
+      "timeline": "100 Hours",
       "mechanics": [
         {
-          "subtitle": "",
-          "description": "",
+          "subtitle": "Intelligent Category Filtering",
+          "description": "A performant filtering system that derives unique categories (e.g., 'Groceries', 'Work') directly from the task dataset. It uses memoization to prevent redundant recalculations during list updates and leverages Set-based aggregation to ensure a clean UI free of duplicate tags.",
           "image": "",
-          "code": "public void OnSelectEntered(SelectEnterEventArgs args)\n{\n    grabbed = true;\n    rb.isKinematic = true;\n}\n\npublic void OnSelectExited(SelectExitEventArgs args)\n{\n    grabbed = false;\n    rb.isKinematic = false;\n}"
-        }
-      ]
-    },
-
-    {
-      "id": "",
-      "title": "",
-      "tagline": "",
-      "description": "",
-      "thumbnail": "",
-      "youtube": "",
-      "screenshots": [],
-      "tags": ["", "", "", ""],
-      "projectRole": "",
-      "timeline": "",
-      "mechanics": [
+          "code": "import { useMemo } from \"react\";\n\nexport default function TaskFilter({ tasks = [], selectedTags = [], onChange }) {\n  const allTags = useMemo(() => {\n    const set = new Set();\n    for (const t of tasks) {\n      (t.tags || []).forEach((tag) => set.add(tag));\n    }\n    return Array.from(set).sort();\n  }, [tasks]);\n\n  const handleTagClick = (tag) => {\n    if (!onChange) return;\n    const newTags = selectedTags.includes(tag)\n      ? selectedTags.filter((t) => t !== tag)\n      : [...selectedTags, tag];\n    onChange(newTags);\n  };\n\n  // UI rendering logic\n}"
+        },
         {
-          "subtitle": "",
-          "description": "",
+          "subtitle": "Dynamic List Routing & View Resolution",
+          "description": "Implements a routing-driven architecture to handle multiple task lists. It dynamically resolves list data via URL parameters and features a circular navigation system for quick switching between different categories or user-defined lists without terminal navigation breaks.",
           "image": "",
-          "code": "public void OnSelectEntered(SelectEnterEventArgs args)\n{\n    grabbed = true;\n    rb.isKinematic = true;\n}\n\npublic void OnSelectExited(SelectExitEventArgs args)\n{\n    grabbed = false;\n    rb.isKinematic = false;\n}"
+          "code": "import { useParams } from \"react-router-dom\";\nimport appData from \"../data/taskdata.json\";\n\nexport default function TaskListView() {\n  const { listId } = useParams();\n  const currentList = appData.lists.find(l => l.id === listId);\n\n  if (!currentList) {\n    return (\n      <div className=\"container mx-auto px-4 py-12 text-center\">\n        List not found\n      </div>\n    );\n  }\n\n  const currentIndex = appData.lists.findIndex(l => l.id === listId);\n  const nextIndex = (currentIndex + 1) % appData.lists.length;\n  const prevIndex = (currentIndex - 1 + appData.lists.length) % appData.lists.length;\n\n  // UI rendering logic for navigation\n}"
+        },
+        {
+          "subtitle": "Firebase Cloud-State Synchronization",
+          "description": "Integrates Firebase Firestore to provide live data updates. This ensures that a grocery list modified on a desktop is updated instantly on a mobile device at the store. The implementation includes cleanup listeners to prevent memory leaks during real-time data streaming.",
+          "image": "",
+          "code": "import { useEffect, useState } from \"react\";\nimport { collection, onSnapshot } from \"firebase/firestore\";\nimport { db } from \"../firebase\";\n\nexport default function useTasks() {\n  const [tasks, setTasks] = useState([]);\n\n  useEffect(() => {\n    const unsubscribe = onSnapshot(collection(db, \"tasks\"), (snapshot) => {\n      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));\n      setTasks(data);\n    });\n\n    return () => unsubscribe();\n  }, []);\n\n  return tasks;\n}"
+        },
+        {
+          "subtitle": "Adaptive Utility Layout",
+          "description": "A mobile-first UI designed for rapid data entry. The layout utilizes Tailwind CSS breakpoints to shift from a single-column mobile list to a multi-column dashboard on larger screens, optimizing the workspace for complex task management.",
+          "image": "",
+          "code": "<div className=\"grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4\">\n  {tasks.map(task => (\n    <TaskItem key={task.id} data={task} />\n  ))}\n</div>"
+        },
+        {
+          "subtitle": "Component Memoization & Render Control",
+          "description": "Optimizes high-frequency UI updates (like checking off items) through selective memoization. By using React.memo, the application ensures that only the specific task item being toggled re-renders, maintaining 60FPS performance even with large datasets.",
+          "image": "",
+          "code": "import { memo } from \"react\";\n\nconst TaskItem = memo(function TaskItem({ title, completed }) {\n  return (\n    <div className=\"flex items-center p-2\">\n      <input type=\"checkbox\" checked={completed} readOnly />\n      <span className={completed ? 'line-through' : ''}>{title}</span>\n    </div>\n  );\n});\n\nexport default TaskItem;"
         }
-      ]
+      ],
+      "git": "https://github.com/simonv08/VerdiepingSoftwareToDoPrioritized"
     }
   ]
 }
